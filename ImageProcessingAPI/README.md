@@ -2,7 +2,7 @@
 Our app is able to take advantage of sharp library to resize images with just adding the dimensions as query url parameters. 
 
 ## Packages
-Structuring the project is as scalable as it can be with all required packages
+Structuring the project is as scalable as it can be with all required packages.
 ### typescript
 I used typescript to make the most use of the strict typing.
 ### prettier
@@ -32,7 +32,7 @@ We can test our script using jasmine by running the following command:
 npm run test
 
 ## Endpoints
-Here I will show endpoints that can be accessed on our server
+Here I will show endpoints that can be accessed on our server.
 ### localhost:3000/
 This is the main endpoint where we can see "Hello there!" message when we access it.
 ### localhost:3000/images
