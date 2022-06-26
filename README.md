@@ -29,7 +29,7 @@ We can start our server after transpiling from typescript to javascript by runni
 > npm run start:dist
 ### test script
 We can test our script using jasmine by running the following command:
-npm run test
+> npm run test
 
 ## Endpoints
 Here I will show endpoints that can be accessed on our server.
