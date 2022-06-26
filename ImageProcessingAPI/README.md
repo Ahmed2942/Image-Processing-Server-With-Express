@@ -20,15 +20,16 @@ I used sharp to make the main fuctionality of resizing my images.
 Here I will show scripts used for build/start/test the application.
 ### build script
 We can build our application by transpiling from typescript to javascript by running the following command:
+> npm run build
 ### start script
 We can start our server before transpiling from typescript to javascript by running the following command:
-$ npm run start $
+> npm run start
 ### start:dist script
 We can start our server after transpiling from typescript to javascript by running the following command:
-$ npm run start:dist $
+> npm run start:dist
 ### test script
 We can test our script using jasmine by running the following command:
-$ npm run test $
+npm run test
 
 ## Endpoints
 Here I will show endpoints that can be accessed on our server
