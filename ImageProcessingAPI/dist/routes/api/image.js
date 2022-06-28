@@ -46,7 +46,7 @@ var path_1 = __importDefault(require("path"));
 var cacheFuncs_1 = require("../../utils/cacheFuncs");
 var image_route = (0, express_1.Router)();
 image_route.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var requestedAddress, imgName, imgPath, width, height, widthNum, heightNum, cached, _a, _b, resizedImgPath_1, resizedImgPath_2, resizedImgPath, error_1;
+    var requestedAddress, imgName, imgPath, width, height, widthNum, heightNum, cached, _a, _b, cachedPath, resizedImgPath_1, resizedImgPath_2, resizedImgPath, error_1;
     return __generator(this, function (_c) {
         switch (_c.label) {
             case 0:
@@ -77,13 +77,14 @@ image_route.get('/', function (req, res) { return __awaiter(void 0, void 0, void
                 if (width == undefined && height == undefined) {
                     return [2 /*return*/, res.status(200).sendFile(imgPath)];
                 }
-                _a = cacheFuncs_1.checkCached;
+                _a = cacheFuncs_1.getCached;
                 _b = [requestedAddress];
                 return [4 /*yield*/, imgData_1.records];
             case 1:
                 cached = _a.apply(void 0, _b.concat([_c.sent()]));
                 if (cached) {
-                    return [2 /*return*/, res.status(304).sendFile(cached)];
+                    cachedPath = cached.pth;
+                    return [2 /*return*/, res.status(304).sendFile(cachedPath)];
                 }
                 if (!(width == undefined)) return [3 /*break*/, 3];
                 return [4 /*yield*/, (0, imgFuncs_1.resizeImgHeight)(imgName, imgPath, heightNum)];

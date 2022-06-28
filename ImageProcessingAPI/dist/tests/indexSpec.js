@@ -41,9 +41,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var supertest_1 = __importDefault(require("supertest"));
 var index_1 = __importDefault(require("../index"));
+var path_1 = __importDefault(require("path"));
 var cacheFuncs_1 = require("../utils/cacheFuncs");
-// make cache file empty
-(0, cacheFuncs_1.createJsonFile)();
+var imgData_1 = require("../utils/imgData");
+var fs_1 = require("fs");
+var imgFuncs_1 = require("../utils/imgFuncs");
 var request = (0, supertest_1.default)(index_1.default);
 describe('Testing responses by', function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
@@ -115,6 +117,46 @@ describe('Testing responses by', function () { return __awaiter(void 0, void 0, 
 }); });
 describe('Testing if image processing was done by', function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
+        it('checking if the resized image is created on server', function () { return __awaiter(void 0, void 0, void 0, function () {
+            var requestedAddress, imgName, imgPath, width, height, cachedIdx, _a, _b, cached, cachedPath, resizedImgPath, resizedImgPath;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        requestedAddress = '/image?filename=image3&width=300&height=300';
+                        imgName = 'image3';
+                        imgPath = path_1.default.resolve("./images/".concat(imgName, ".jpg"));
+                        width = 300;
+                        height = 300;
+                        _a = cacheFuncs_1.searchCached;
+                        _b = [requestedAddress];
+                        return [4 /*yield*/, imgData_1.records];
+                    case 1:
+                        cachedIdx = _a.apply(void 0, _b.concat([_c.sent()]));
+                        return [4 /*yield*/, imgData_1.records];
+                    case 2:
+                        cached = (_c.sent())[cachedIdx];
+                        if (!cached) return [3 /*break*/, 4];
+                        console.log('there');
+                        cachedPath = cached.pth;
+                        // delete cached
+                        (0, fs_1.unlinkSync)(cachedPath);
+                        (0, cacheFuncs_1.dropCached)(cachedIdx);
+                        return [4 /*yield*/, (0, imgFuncs_1.resizeImg)(imgName, imgPath, width, height)];
+                    case 3:
+                        resizedImgPath = _c.sent();
+                        (0, cacheFuncs_1.cacheImg)(requestedAddress, resizedImgPath);
+                        expect((0, fs_1.existsSync)(resizedImgPath)).toBe(true);
+                        return [3 /*break*/, 6];
+                    case 4: return [4 /*yield*/, (0, imgFuncs_1.resizeImg)(imgName, imgPath, width, height)];
+                    case 5:
+                        resizedImgPath = _c.sent();
+                        (0, cacheFuncs_1.cacheImg)(requestedAddress, resizedImgPath);
+                        expect((0, fs_1.existsSync)(resizedImgPath)).toBe(true);
+                        _c.label = 6;
+                    case 6: return [2 /*return*/];
+                }
+            });
+        }); });
         it('checking if server returns 200 when we provide only width', function () { return __awaiter(void 0, void 0, void 0, function () {
             var response;
             return __generator(this, function (_a) {
@@ -122,7 +164,7 @@ describe('Testing if image processing was done by', function () { return __await
                     case 0: return [4 /*yield*/, request.get('/image?filename=image2&width=300')];
                     case 1:
                         response = _a.sent();
-                        expect(response.status).toEqual(200);
+                        expect(response.status == 200 || response.status == 304).toBe(true);
                         return [2 /*return*/];
                 }
             });
@@ -134,7 +176,7 @@ describe('Testing if image processing was done by', function () { return __await
                     case 0: return [4 /*yield*/, request.get('/image?filename=image2&height=300')];
                     case 1:
                         response = _a.sent();
-                        expect(response.status).toEqual(200);
+                        expect(response.status == 200 || response.status == 304).toBe(true);
                         return [2 /*return*/];
                 }
             });
@@ -146,7 +188,7 @@ describe('Testing if image processing was done by', function () { return __await
                     case 0: return [4 /*yield*/, request.get('/image?filename=image2&width=300&height=300')];
                     case 1:
                         response = _a.sent();
-                        expect(response.status).toEqual(200);
+                        expect(response.status == 200 || response.status == 304).toBe(true);
                         return [2 /*return*/];
                 }
             });

@@ -36,17 +36,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createJsonFile = exports.readCache = exports.checkCached = exports.cacheImg = void 0;
+exports.readCache = exports.getCached = exports.searchCached = exports.dropCached = exports.cacheImg = void 0;
 var fs_1 = require("fs");
 var imgData_1 = require("./imgData");
 var jsonFilePath = './output/cache.json';
-var createJsonFile = function () { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        fs_1.promises.writeFile(jsonFilePath, '[]', 'utf-8');
-        return [2 /*return*/];
-    });
-}); };
-exports.createJsonFile = createJsonFile;
 var cacheImg = function (requestedAddress, resizedImgPath) { return __awaiter(void 0, void 0, void 0, function () {
     var arr;
     return __generator(this, function (_a) {
@@ -64,6 +57,20 @@ var cacheImg = function (requestedAddress, resizedImgPath) { return __awaiter(vo
     });
 }); };
 exports.cacheImg = cacheImg;
+var dropCached = function (idx) { return __awaiter(void 0, void 0, void 0, function () {
+    var arr;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, imgData_1.records];
+            case 1:
+                arr = _a.sent();
+                arr.splice(idx, 1);
+                fs_1.promises.writeFile(jsonFilePath, JSON.stringify(arr), 'utf-8');
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.dropCached = dropCached;
 var readCache = function () { return __awaiter(void 0, void 0, void 0, function () {
     var cacheFile, jsonArr;
     return __generator(this, function (_a) {
@@ -77,9 +84,19 @@ var readCache = function () { return __awaiter(void 0, void 0, void 0, function 
     });
 }); };
 exports.readCache = readCache;
-var checkCached = function (requestedAddress, records) {
+var searchCached = function (requestedAddress, records) {
     for (var i = 0; i < records.length; i++) {
-        return records[i].addr == requestedAddress ? records[i].pth : false;
+        if (records[i].addr == requestedAddress) {
+            return i;
+        }
+    }
+    return -1;
+};
+exports.searchCached = searchCached;
+var getCached = function (requestedAddress, records) {
+    var cachedIdx = searchCached(requestedAddress, records);
+    if (cachedIdx != -1) {
+        return records[cachedIdx];
     }
 };
-exports.checkCached = checkCached;
+exports.getCached = getCached;
