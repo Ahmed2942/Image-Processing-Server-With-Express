@@ -11,10 +11,8 @@ interface Record {
 // create array for caching
 // const records: Record[];
 
-const records: Promise<Record[]> = readCache().then(
-    (records) => {
-        return records;
-    }
-);
+const records: Promise<Record[]> = readCache().then((records) => {
+    return records;
+});
 
 export { imgNames, Record, records };

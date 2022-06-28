@@ -6,7 +6,7 @@ import {
 } from '../../utils/imgFuncs';
 import { imgNames, records } from '../../utils/imgData';
 import path from 'path';
-import { cacheImg, checkCached } from '../../utils/cacheFuncs';
+import { cacheImg, getCached } from '../../utils/cacheFuncs';
 
 const image_route = Router();
 
@@ -39,9 +39,10 @@ image_route.get('/', async (req: Request, res: Response) => {
             return res.status(200).sendFile(imgPath);
         }
         // if image is cached
-        const cached = checkCached(requestedAddress, await records);
+        const cached = getCached(requestedAddress, await records);
         if (cached) {
-            return res.status(304).sendFile(cached as string);
+            const cachedPath = cached.pth;
+            return res.status(304).sendFile(cachedPath as string);
         }
         // if width provided but not height
         if (width == undefined) {

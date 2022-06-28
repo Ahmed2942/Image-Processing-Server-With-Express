@@ -3,10 +3,6 @@ import { Record, records } from './imgData';
 
 const jsonFilePath = './output/cache.json';
 
-const createJsonFile = async () => {
-    fsPromises.writeFile(jsonFilePath, '[]', 'utf-8');
-};
-
 const cacheImg = async (
     requestedAddress: string,
     resizedImgPath: string
@@ -19,16 +15,38 @@ const cacheImg = async (
     fsPromises.writeFile(jsonFilePath, JSON.stringify(arr), 'utf-8');
 };
 
+const dropCached = async (idx: number): Promise<void> => {
+    const arr = await records;
+    arr.splice(idx, 1);
+    fsPromises.writeFile(jsonFilePath, JSON.stringify(arr), 'utf-8');
+};
+
 const readCache = async (): Promise<Record[]> => {
     const cacheFile = await fsPromises.readFile(jsonFilePath, 'utf-8');
     const jsonArr = JSON.parse(cacheFile);
     return jsonArr;
 };
 
-const checkCached = (requestedAddress: string, records: Record[]): unknown => {
+const searchCached = (
+    requestedAddress: string,
+    records: Record[]
+): number | undefined => {
     for (let i = 0; i < records.length; i++) {
-        return records[i].addr == requestedAddress ? records[i].pth : false;
+        if (records[i].addr == requestedAddress) {
+            return i;
+        }
+    }
+    return -1;
+};
+
+const getCached = (
+    requestedAddress: string,
+    records: Record[]
+): Record | undefined => {
+    const cachedIdx = searchCached(requestedAddress, records);
+    if (cachedIdx != -1) {
+        return records[cachedIdx as number];
     }
 };
 
-export { cacheImg, checkCached, readCache, createJsonFile };
+export { cacheImg, dropCached, searchCached, getCached, readCache };
